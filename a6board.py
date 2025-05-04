@@ -51,13 +51,13 @@ class Board:
         """
         Returns the width (i.e. number of columns) in this board.
         """
-        pass
+        return self._width
     
     def getHeight(self):
         """
         Returns the height (i.e. number of rows) in this board.
         """
-        pass
+        return self._height
     
     def getStreak(self):
         """
@@ -66,7 +66,7 @@ class Board:
         The pieces can be horizontal, vertical, or diagonal, but they must all
         be the same color.
         """
-        pass
+        return self.streak
     
     def __init__(self,rows=6,cols=7,streak=4):
         """
@@ -88,7 +88,12 @@ class Board:
         (DEFAULT 4)
         Precondition: streak is an int > 0 and <= min(rows,cols)
         """
-        pass
+        assert rows>0 and cols>0 and streak<=min(rows,cols)
+        self._width=cols
+        self._height=rows
+        self._streak=streak
+        self._board=[[''for i in range(cols)] for i in range(rows)]
+        self._moves=[]
     
     def clear(self):
         """
@@ -97,7 +102,8 @@ class Board:
         The board will be rebuiilt so that all locations are now the empty string.
         In addition, the list of moves will be reset to the empty list.
         """
-        pass
+        self._board=[[''for i in range(self._width)] for i in range(self._height)]
+        self._moves=[]
     
     def getColor(self,r,c):
         """
@@ -112,7 +118,7 @@ class Board:
         Parameter c: The column
         Precondition: c is an int and a valid column position in board
         """
-        pass
+        return self._board[r][c]
     
     def getMoveCount(self):
         """
@@ -120,7 +126,7 @@ class Board:
         
         This is equal to the number of pieces in the board.
         """
-        pass
+        return len(self._moves)
     
     def getLastMove(self):
         """
@@ -128,7 +134,9 @@ class Board:
         
         The value will be in the format (row,column)
         """
-        pass
+        if self._moves:
+            return self._moves[-1]
+        return None
     
     #### PART B ####
     def findAvailableRow(self,col):
@@ -140,7 +148,10 @@ class Board:
         Parameter col: The column
         Precondition: col is an int and a valid column in this board.
         """
-        pass
+        for r in range(self._height):
+            if self._board[r][col]=='':
+                return r 
+        return self._height
     
     def isFullColumn(self,col):
         """
@@ -150,7 +161,7 @@ class Board:
         Parameter col: The column
         Precondition: col is an int and a valid column in this board.
         """
-        pass
+        return self._board[self._height-1][col]!=''
     
     def isFullBoard(self):
         """
@@ -159,7 +170,7 @@ class Board:
         
         The board is full is every location stores a non-empty string.
         """
-        pass
+        return all(self._board[r]!='' for r in rsnge(self._height)for c in range(self._width))
     
     def place(self,column,color):
         """
@@ -181,7 +192,12 @@ class Board:
         Precondition: color is a valid color string (i.e., either
         introcs.is_tkcolor or introcs.is_webcolor returns True).
         """
-        pass
+        row=self.findAvailableRow(column)
+        if row<self._height:
+            self._board[row][column]=color
+            self.moves.append((row,column))
+            return row
+        return -1
 
     def undoPlace(self):
         """
@@ -194,7 +210,9 @@ class Board:
         
         Calling this method multiple times will undo the entire board.
         """
-        pass
+        if self._moves:
+            row,col=self._moves.pop()
+            self._board[row][col]=''
 
     # WE HAVE IMPLEMENTED THIS FUNCTION FOR YOU
     # DO NOT MODIFY THIS METHOD
@@ -349,7 +367,17 @@ class Board:
         #    color of the original piece
         # 3. Make sure you stop the loop before the column goes out of bounds
         # 4. Use dist to make sure the length of the run is long enough
-        pass
+
+    color=self._board[r][c]
+    c1=c
+    while c1>0 and self._board[r][c1-1]==color:
+        c1-=1
+    c2=c
+    while c2<self._width-1 and self._board[r][c2+1]==color:
+        c2+=1
+    if c2-c1+1>=leng:
+        return(r,c1,r,c2)
+    return None
     
     def findSWNE(self,r,c,leng):
         """
@@ -379,7 +407,18 @@ class Board:
         #    color does not match the color of the original piece
         # 3. The position should end where the colors match, so you need to "back up"
         # 4. Use dist to make sure the length of the run is long enough
-        pass
+        color=self._board[r][c]
+        r1,c1=r,c
+        while r1>0 and self._board[r1-1][c1-1]==color:
+            r1-=1
+            c1-=1
+        r2,c2=r,c
+        while r2<self._height-1 and c2<self._width-1 and self._board[r2+1][c2+1]
+            r2+=1
+            c2+=1
+        if dist(self,r1,c1,r2,c2)>=leng:
+            return(r1,c1,r2,c2)
+        return None
     
     def findNWSE(self,r,c,leng):
         """
@@ -409,7 +448,19 @@ class Board:
         #    color does not match the color of the original piece
         # 3. The position should end where the colors match, so you need to "back up"
         # 4. Use dist to make sure the length of the run is long enough
-        pass
+        color=self._board[r][c]
+        r1,c1=r,c
+        while r1>0 and c1<self._width-1 and self._board[r1-1][c1-1]==color:
+            r1-=1
+            c1+=1
+        r2,c2=r,c
+        while r2<self._height-1 and c2>0 and self._board[r2+1][c2-1]==color:
+            r2+=1
+            c2-=1
+        if dist(self,r1,c1,r2,c2)>=leng:
+            return(r1,c1,r2,c2)
+        return None
+            
     
     def findWins(self,r,c):
         """
@@ -428,7 +479,17 @@ class Board:
         Precondition: c is an int and a valid column in the board; there is a color 
         in (r,c)
         """
-        pass
+        streak=self._getStreak()
+        result=selF.findAcross(r,c,streak)
+        if result:
+            return result
+        result=self.findAcross(r,c,streak)
+        if result:
+            return result
+        result=self.findSWNE(r,c,streak)
+        if result:
+            return result
+        return self.findNWSE(r,c,streak)
 
 
 #### HELPER FUNCTIONS ####
