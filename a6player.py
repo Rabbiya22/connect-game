@@ -39,19 +39,22 @@ class Player(object):
         Parameter value: The new name
         Precondition: value is a string
         """
-        pass
+        if value=='':
+            self.name=self._color.capitalize()+'player'
+        else:
+            self._name=value
     
     def getName(self):
         """
         Returns the player name
         """
-        pass
+        return self._name
     
     def getColor(self):
         """
         Returns the player color
         """
-        pass
+        return self._color
     
     def __init__(self,color,name=''):
         """
@@ -68,7 +71,8 @@ class Player(object):
         Parameter name: The new name (default empty string)
         Precondition: name is a string
         """
-        pass
+        self._color=color
+        self.setName(name)
     
     # WE HAVE IMPLEMENTED THIS FUNCTION FOR YOU
     # DO NOT MODIFY THIS METHOD
@@ -115,7 +119,9 @@ class AIPlayer(Player):
         Precondition: run is None or a tuple (r1,c1,r2,c2) of valid board
         positions.
         """
-        pass
+        if run is None:
+            return SCORE_BAD
+        retrun board.dist(run)
 
     def _evaluate(self,board,r,c):
         """
@@ -142,7 +148,12 @@ class AIPlayer(Player):
         """
         # HINT: If there is no immediate win, search for smaller streaks.
         # This requirea a loop where you search for streaks of smaller values each step
-        pass
+        runs=[board.verticalRun(r,c),board.horizontalRun(r,c),board.swneRun(r,c),board.nwseRun(r,c)]
+        scores=[[self._scoreRun(board,run) for run in runs]
+        if SCORE_WIN in scores:
+                return SCORE_WIN
+         return max(scores+[1])
+                
 
     def _gatherMoves(self,board):
         """
@@ -155,7 +166,11 @@ class AIPlayer(Player):
         Parameter board: The board to evaluate
         Precondition: board is a Board object
         """
-        pass
+        moves={}
+        for col in range(board.getWidth()):
+            if not board.isFullColumn(col):
+                moves[col]=SCORE_BAD
+        return moves
     
     def _evaluateMoves(self,board,moves):
         """
@@ -172,7 +187,11 @@ class AIPlayer(Player):
         Parameter moves: The moves to evaluate
         Precondition: moves is a dict whose keys are columns and values are scores
         """
-        pass
+        for col in moves:
+            row=board.getNextRow(col)
+            board.place(self._color,col)
+            moves[col]=self._evaluate(board,row,col)
+            board.undoPlace(col)
     
     def _findBestMoves(self,board,moves):
         """
@@ -191,7 +210,8 @@ class AIPlayer(Player):
         """
         # HINT: Use an accumulator to build the list of best moves, but reset it if you
         # find a better move
-        pass
+        best=max(moves.values())
+        return[col for col in moves if moves[col]==best] 
     
     def chooseMove(self,board):
         """
@@ -200,7 +220,10 @@ class AIPlayer(Player):
         Parameter board: The board to choose from
         Precondition: board is a Board object that is not full
         """
-        pass
+        moves=self.gatherMoves(board)
+        self._evaluateMoves(board,moves)
+        best._moves=self._findBestMoves(board,moves)
+        return random.choice(best_moves)
 
 
 #### EXTRA CREDIT ####
