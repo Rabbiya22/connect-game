@@ -110,7 +110,7 @@ class Game:
         self.width=width
         self.height=height
         self.streak=streak
-        self.board=[["" for i in rande(width)} for i in range(hheight)]
+        self.board=[["" for i in rande(width)]for i in range(height)]
         self.players=[]
         self.current_player_index=-1
         self.winner=None
