@@ -368,16 +368,16 @@ class Board:
         # 3. Make sure you stop the loop before the column goes out of bounds
         # 4. Use dist to make sure the length of the run is long enough
 
-    color=self._board[r][c]
-    c1=c
-    while c1>0 and self._board[r][c1-1]==color:
-        c1-=1
-    c2=c
-    while c2<self._width-1 and self._board[r][c2+1]==color:
-        c2+=1
-    if c2-c1+1>=leng:
-        return(r,c1,r,c2)
-    return None
+        color=self._board[r][c]
+        c1=c
+        while c1>0 and self._board[r][c1-1]==color:
+           c1-=1
+           c2=c
+        while c2<self._width-1 and self._board[r][c2+1]==color:
+            c2+=1
+        if c2-c1+1>=leng:
+           return(r,c1,r,c2)
+        return None
     
     def findSWNE(self,r,c,leng):
         """
@@ -413,7 +413,7 @@ class Board:
             r1-=1
             c1-=1
         r2,c2=r,c
-        while r2<self._height-1 and c2<self._width-1 and self._board[r2+1][c2+1]
+        while r2<self._height-1 and c2<self._width-1 and self._board[r2+1][c2+1]:
             r2+=1
             c2+=1
         if dist(self,r1,c1,r2,c2)>=leng:
