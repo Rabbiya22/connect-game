@@ -149,10 +149,10 @@ class AIPlayer(Player):
         # HINT: If there is no immediate win, search for smaller streaks.
         # This requirea a loop where you search for streaks of smaller values each step
         runs=[board.verticalRun(r,c),board.horizontalRun(r,c),board.swneRun(r,c),board.nwseRun(r,c)]
-        scores=[[self._scoreRun(board,run) for run in runs]
+        scores=[[self._scoreRun(board,run) for run in runs]]
         if SCORE_WIN in scores:
                 return SCORE_WIN
-         return max(scores+[1])
+        return max(scores+[1])
                 
 
     def _gatherMoves(self,board):
