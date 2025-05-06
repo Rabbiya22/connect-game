@@ -121,7 +121,7 @@ class AIPlayer(Player):
         """
         if run is None:
             return SCORE_BAD
-        retrun board.dist(run)
+        return board.dist(run)
 
     def _evaluate(self,board,r,c):
         """
@@ -229,8 +229,7 @@ class AIPlayer(Player):
 #### EXTRA CREDIT ####
 class BetterAIPlayer(AIPlayer):
     # You are on your own
-    pass
-
+      pass
 
 #### HELPER FUNCTIONS ####
 # DO NOT MODIFY
